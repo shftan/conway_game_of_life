@@ -1,17 +1,6 @@
 import numpy as np
-
-#// Use matplotlib for visualization
-#// build grid
-#// random cells shown alive
-#// step 
-#    // observe current state, determine new state for each cell
-#    // plot the new state
-
-
-
-# list of alive cells
-# [(x1, y1), (x2, y2)]
-
+import matplotlib.pyplot as plt
+from matplotlib.animation import FuncAnimation
 
 # Function that given a cell, finds all of its neighbors
 GRID_LENGTH = 10
@@ -50,7 +39,6 @@ def get_new_state(old_grid):
 
     return new_grid
 
-
 # Function that initializes a grid given user input
 # The grid will have values 0 or 1. 0 indicates dead, 1 indicates alive
 def initialize_grid():
@@ -58,11 +46,24 @@ def initialize_grid():
     grid = np.random.randint(2, size=(GRID_LENGTH, GRID_WIDTH))
     return grid
 
+def plot_grid(grid, step_num):
+    plt.imshow(grid)
+    plt.title(f"""Step:{step_num}""")
+    plt.show()
+
 
 if __name__ == "__main__":
     old_grid = initialize_grid()
-    print(old_grid)
+    #print(old_grid)
+    plot_grid(old_grid, 0)
+    #grids = []
+    #grids.append(old_grid)
     for x in range(100):
         grid = get_new_state(old_grid)
-        print(grid)
+        #grids.append(grid)
+        plot_grid(grid, x)
         old_grid = grid
+    #fig, ax = plt.subplots(1,1)
+
+    #ani = FuncAnimation(fig, plot_grid, frames=len(grids))
+    #plt.show()  
