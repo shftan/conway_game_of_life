@@ -5,6 +5,7 @@ from matplotlib.animation import FuncAnimation
 GRID_LENGTH = 10
 GRID_WIDTH = 10
 
+# Functions to check if proposed cell coordinates are out-of-bounds
 def check_boundaries_length(a):
     if a < 0 or a > (GRID_LENGTH-1):
         return False
@@ -30,6 +31,7 @@ def find_alive_neighbors(grid, i, j):
     sum_alive_neighbours += grid[i, j + 1] if (check_boundaries_length(i) and check_boundaries_width(j + 1)) else 0
     return sum_alive_neighbours
 
+# Function that goes from the current grid to the new grid, applying the Game of Life rules 
 def get_new_state(old_grid):
     new_grid = np.zeros((GRID_LENGTH, GRID_WIDTH))
 
@@ -52,16 +54,41 @@ def initialize_grid():
     grid = np.random.randint(2, size=(GRID_LENGTH, GRID_WIDTH))
     return grid
 
-def plot_grid(grid, step_num):
-    plt.imshow(grid)
-    plt.title(f"""Step:{step_num}""")
-    plt.show()
+# Function to plot a given grid
+def plot_grid(frame, im, title_artist):
+    grid, step_num = frame
+    im.set_data(grid)
+    title_artist.set_text(f"""Step: {step_num}""")
+    return (im, title_artist)
 
+def init():
+    im.set_data(old_grid)
+    title_artist.set_text("Step: 0")
+    return (im, title_artist)
+
+# Main function
 if __name__ == "__main__":
     old_grid = initialize_grid()
-    for x in range(100):
-        grid = get_new_state(old_grid)
-        plot_grid(grid, x)
-        old_grid = grid
-    #ani = FuncAnimation(fig, plot_grid, frames=len(grids))
-    #plt.show()  
+
+    fig, ax = plt.subplots()
+    im = ax.imshow(old_grid, cmap="binary", vmin=0, vmax=1, interpolation="nearest", animated=True)
+    title_artist = ax.set_title("Step: 0")
+    
+    frames = []
+    grid = old_grid
+    for step in range(100):
+        frames.append((grid, step))
+        grid = get_new_state(grid)
+
+    ani = FuncAnimation(
+        fig,
+        plot_grid,
+        frames=frames,
+        fargs=(im, title_artist),
+        init_func=init,
+        blit=False,
+        interval=1000,
+        repeat=False,
+    )
+
+    plt.show()
