@@ -2,26 +2,32 @@ import numpy as np
 import matplotlib.pyplot as plt
 from matplotlib.animation import FuncAnimation
 
-# Function that given a cell, finds all of its neighbors
 GRID_LENGTH = 10
 GRID_WIDTH = 10
 
-def check_boundaries(a):
-    if a < 0 or a > 9:
+def check_boundaries_length(a):
+    if a < 0 or a > (GRID_LENGTH-1):
+        return False
+    else:
+        return True    
+    
+def check_boundaries_width(b):
+    if b < 0 or b > (GRID_WIDTH-1):
         return False
     else:
         return True    
 
+# Function that given a cell, finds all of its neighbors
 def find_alive_neighbors(grid, i, j):
     sum_alive_neighbours = 0
-    sum_alive_neighbours += grid[i + 1, j + 1] if (check_boundaries(i + 1) and check_boundaries( j + 1)) else 0
-    sum_alive_neighbours += grid[i + 1, j - 1] if (check_boundaries(i + 1) and check_boundaries( j - 1)) else 0
-    sum_alive_neighbours += grid[i - 1, j - 1] if (check_boundaries(i - 1) and check_boundaries( j - 1)) else 0
-    sum_alive_neighbours += grid[i - 1, j + 1] if (check_boundaries(i - 1) and check_boundaries( j + 1)) else 0
-    sum_alive_neighbours += grid[i - 1, j] if (check_boundaries(i - 1) and check_boundaries( j)) else 0
-    sum_alive_neighbours += grid[i + 1, j] if (check_boundaries(i + 1) and check_boundaries( j)) else 0
-    sum_alive_neighbours += grid[i, j - 1] if (check_boundaries(i) and check_boundaries( j - 1)) else 0
-    sum_alive_neighbours += grid[i, j + 1] if (check_boundaries(i) and check_boundaries( j + 1)) else 0
+    sum_alive_neighbours += grid[i + 1, j + 1] if (check_boundaries_length(i + 1) and check_boundaries_width(j + 1)) else 0
+    sum_alive_neighbours += grid[i + 1, j - 1] if (check_boundaries_length(i + 1) and check_boundaries_width(j - 1)) else 0
+    sum_alive_neighbours += grid[i - 1, j - 1] if (check_boundaries_length(i - 1) and check_boundaries_width(j - 1)) else 0
+    sum_alive_neighbours += grid[i - 1, j + 1] if (check_boundaries_length(i - 1) and check_boundaries_width(j + 1)) else 0
+    sum_alive_neighbours += grid[i - 1, j] if (check_boundaries_length(i - 1) and check_boundaries_width(j)) else 0
+    sum_alive_neighbours += grid[i + 1, j] if (check_boundaries_length(i + 1) and check_boundaries_width(j)) else 0
+    sum_alive_neighbours += grid[i, j - 1] if (check_boundaries_length(i) and check_boundaries_width(j - 1)) else 0
+    sum_alive_neighbours += grid[i, j + 1] if (check_boundaries_length(i) and check_boundaries_width(j + 1)) else 0
     return sum_alive_neighbours
 
 def get_new_state(old_grid):
@@ -51,19 +57,11 @@ def plot_grid(grid, step_num):
     plt.title(f"""Step:{step_num}""")
     plt.show()
 
-
 if __name__ == "__main__":
     old_grid = initialize_grid()
-    #print(old_grid)
-    plot_grid(old_grid, 0)
-    #grids = []
-    #grids.append(old_grid)
     for x in range(100):
         grid = get_new_state(old_grid)
-        #grids.append(grid)
         plot_grid(grid, x)
         old_grid = grid
-    #fig, ax = plt.subplots(1,1)
-
     #ani = FuncAnimation(fig, plot_grid, frames=len(grids))
     #plt.show()  
